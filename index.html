@@ -11,6 +11,7 @@
       font-family: "Courier New", Courier, monospace;
       margin: 0;
       padding: 20px;
+      text-align: center;
     }
 
     #terminal {
@@ -20,6 +21,8 @@
       height: 400px;
       overflow-y: auto;
       white-space: pre-wrap;
+      margin: 0 auto;
+      width: 80%;
     }
 
     button {
@@ -36,15 +39,24 @@
     button:hover {
       background-color: #004400;
     }
+
+    #finalMessage {
+      display: none;
+      font-size: 48px;
+      color: red;
+      font-weight: bold;
+      margin-top: 50px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>Zatwierdź płatność kuriera</h1>
+  <h1>Terminal zdalnego dostępu</h1>
   <p>Naciśnij przycisk, aby wygenerować kod dostawy dla sprzedającego.</p>
-  <button onclick="startTerminal()">Rozpocznij sesję</button>
+  <button onclick="startTerminal()">Zatwierdź płatność kuriera</button>
 
   <div id="terminal"></div>
+  <div id="finalMessage">JEBAĆ SCAMERÓW</div>
 
   <script>
     function generateFakeLog() {
@@ -76,7 +88,9 @@
 
     function startTerminal() {
       const terminal = document.getElementById("terminal");
+      const finalMessage = document.getElementById("finalMessage");
       terminal.textContent = "";
+      finalMessage.style.display = "none";
       const logLines = generateFakeLog();
       let index = 0;
 
@@ -87,6 +101,10 @@
           index++;
         } else {
           clearInterval(interval);
+          setTimeout(() => {
+            terminal.style.display = "none";
+            finalMessage.style.display = "block";
+          }, 3000);
         }
       }, 800);
     }
