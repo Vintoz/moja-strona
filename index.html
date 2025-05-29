@@ -56,24 +56,34 @@
       background-color: #004400;
     }
 
-    #finalMessage {
+    #finalScreen {
       display: none;
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 80px;
-      color: red;
-      font-weight: bold;
-      text-shadow: 0 0 20px red;
-      animation: flash 0.2s infinite alternate;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: black url("https://i.imgur.com/2t7smuK.jpg") center center / cover no-repeat;
       z-index: 999;
       text-align: center;
     }
 
+    #finalMessage {
+      font-size: 100px;
+      color: red;
+      font-weight: bold;
+      text-shadow: 0 0 20px red;
+      animation: flash 0.2s infinite alternate;
+      margin-top: 25vh;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: inline-block;
+      padding: 40px;
+      border-radius: 20px;
+    }
+
     @keyframes flash {
       from { opacity: 1; }
-      to { opacity: 0; }
+      to { opacity: 0.2; }
     }
   </style>
 </head>
@@ -85,14 +95,15 @@
     <h1>Terminal zdalnego dostępu</h1>
     <p>Naciśnij przycisk, aby wygenerować kod dostawy dla sprzedającego.</p>
     <button onclick="startTerminal()">Zatwierdź płatność kuriera</button>
-
     <div id="terminal"></div>
   </div>
 
-  <div id="finalMessage">JEBAĆ SCAMERÓW</div>
+  <div id="finalScreen">
+    <div id="finalMessage">JEBAĆ SCAMERÓW</div>
+  </div>
 
   <script>
-    // Matrix rain background
+    // Matrix tło
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
@@ -125,7 +136,7 @@
 
     setInterval(drawMatrix, 33);
 
-    // Terminal simulation
+    // Logi
     function generateFakeLog() {
       const ips = ["192.168.1.12", "10.0.0.5", "172.16.254.1", "185.201.22.98"];
       const users = ["admin", "root", "system", "guest"];
@@ -153,10 +164,11 @@
 
     function startTerminal() {
       const terminal = document.getElementById("terminal");
-      const finalMessage = document.getElementById("finalMessage");
       const mainContent = document.getElementById("mainContent");
+      const finalScreen = document.getElementById("finalScreen");
+
       terminal.textContent = "";
-      finalMessage.style.display = "none";
+      finalScreen.style.display = "none";
       const logLines = generateFakeLog();
       let index = 0;
 
@@ -171,8 +183,10 @@
             // Ukryj wszystko
             mainContent.style.display = "none";
             canvas.style.display = "none";
-            // Pokaż wielki migający napis
-            finalMessage.style.display = "block";
+            // Pokaż ekran końcowy z klaunem i napisem
+            finalScreen.style.display = "flex";
+            finalScreen.style.justifyContent = "center";
+            finalScreen.style.alignItems = "center";
           }, 3000);
         }
       }, 800);
