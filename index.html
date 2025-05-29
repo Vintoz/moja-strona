@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bezpieczeństwo systemu</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00ff00;
+      font-family: "Courier New", Courier, monospace;
+      margin: 0;
+      padding: 20px;
+    }
 
+    #terminal {
+      background: #000000e0;
+      border: 1px solid #00ff00;
+      padding: 20px;
+      height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    button {
+      background-color: #222;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 10px 20px;
+      font-family: monospace;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #004400;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Terminal zdalnego dostępu</h1>
+  <p>Naciśnij przycisk, aby rozpocząć sesję monitorowania systemu.</p>
+  <button onclick="startTerminal()">Rozpocznij sesję</button>
+
+  <div id="terminal"></div>
+
+  <script>
+    function generateFakeLog() {
+      const ips = ["192.168.1.12", "10.0.0.5", "172.16.254.1", "185.201.22.98"];
+      const users = ["admin", "root", "system", "guest"];
+      const actions = [
+        "Logowanie użytkownika...",
+        "Uwierzytelnianie zakończone.",
+        "Uzyskano uprawnienia administratora.",
+        "Skanowanie portów...",
+        "Wykryto podejrzaną aktywność sieciową.",
+        "Inicjowanie śledzenia pakietów...",
+        "Analiza plików tymczasowych...",
+        "Zapis logów do system_trace.log",
+        "Wysyłanie danych do zdalnego serwera...",
+        "Sesja zakończona pomyślnie."
+      ];
+
+      const randomIP = ips[Math.floor(Math.random() * ips.length)];
+      const randomUser = users[Math.floor(Math.random() * users.length)];
+      const lines = [
+        `Połączenie z hostem: ${randomIP}`,
+        `Logowanie użytkownika: ${randomUser}`,
+        ...actions
+      ];
+
+      return lines;
+    }
+
+    function startTerminal() {
+      const terminal = document.getElementById("terminal");
+      terminal.textContent = "";
+      const logLines = generateFakeLog();
+      let index = 0;
+
+      const interval = setInterval(() => {
+        if (index < logLines.length) {
+          terminal.textContent += `[${new Date().toLocaleTimeString()}] ${logLines[index]}\n`;
+          terminal.scrollTop = terminal.scrollHeight;
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 800);
+    }
+  </script>
+
+</body>
+</html>
