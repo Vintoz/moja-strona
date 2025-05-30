@@ -18,6 +18,7 @@
       height: 100vh;
       background-image: linear-gradient(135deg, #ff77aa, #7799ff);
       overflow: hidden;
+      position: relative;
     }
     .container {
       background: #222;
@@ -27,6 +28,8 @@
       max-width: 600px;
       box-shadow: 0 0 20px #000;
       border-radius: 16px;
+      position: relative;
+      z-index: 1;
     }
     h1 {
       font-size: 20px;
@@ -89,7 +92,7 @@
     <a class="button" href="#">nie :c</a>
   </div>
 
-  <div class="container" id="question2" style="display:none; position: relative; height: 300px;">
+  <div class="container" id="question2" style="display:none; height: 300px;">
     <h1>Czy możemy się spotkać wieczorem?</h1>
     <div class="cloud cloud1" onclick="alert('Super! ♥')">tak!</div>
     <div class="cloud cloud2" id="noCloud">nie</div>
@@ -102,8 +105,6 @@
     }
 
     const noCloud = document.getElementById('noCloud');
-    const screenWidth = 1440;
-    const screenHeight = 1080;
 
     document.addEventListener('mousemove', function(e) {
       const rect = noCloud.getBoundingClientRect();
@@ -117,11 +118,14 @@
         let moveX = dx > 0 ? -40 : 40;
         let moveY = dy > 0 ? -40 : 40;
 
-        let newLeft = rect.left + moveX;
-        let newTop = rect.top + moveY;
+        let newLeft = noCloud.offsetLeft + moveX;
+        let newTop = noCloud.offsetTop + moveY;
 
-        newLeft = Math.max(0, Math.min(screenWidth - rect.width, newLeft));
-        newTop = Math.max(0, Math.min(screenHeight - rect.height, newTop));
+        const maxLeft = window.innerWidth - rect.width;
+        const maxTop = window.innerHeight - rect.height;
+
+        newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+        newTop = Math.max(0, Math.min(maxTop, newTop));
 
         noCloud.style.left = `${newLeft}px`;
         noCloud.style.top = `${newTop}px`;
