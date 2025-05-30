@@ -20,6 +20,7 @@
       overflow: hidden;
       position: relative;
     }
+
     .container {
       background: #222;
       border: 4px solid #fff;
@@ -28,16 +29,23 @@
       max-width: 600px;
       box-shadow: 0 0 20px #000;
       border-radius: 16px;
-      position: relative;
+      position: absolute;
       z-index: 1;
+      display: none;
     }
+
+    #question1 {
+      display: block;
+    }
+
     h1 {
       font-size: 20px;
       margin-bottom: 30px;
     }
+
     .button {
-      display: block;
-      margin: 10px auto;
+      display: inline-block;
+      margin: 10px;
       padding: 10px 20px;
       background: #44ff99;
       color: #000;
@@ -47,7 +55,9 @@
       font-size: 16px;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
+      position: relative;
     }
+
     .button:hover {
       background: #88ffaa;
     }
@@ -63,11 +73,13 @@
       font-size: 14px;
       transition: top 0.3s ease, left 0.3s ease;
     }
+
     .cloud1 {
       top: 50%;
       left: 20%;
       animation: float1 4s ease-in-out infinite;
     }
+
     .cloud2 {
       top: 50%;
       left: 60%;
@@ -83,27 +95,107 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(10px); }
     }
+
+    .final-message {
+      font-size: 24px;
+      padding: 30px 10px;
+    }
+
+    .back-button {
+      margin-top: 40px;
+      font-size: 12px;
+      padding: 8px 12px;
+    }
   </style>
 </head>
 <body>
+  <!-- Pytanie 1 -->
   <div class="container" id="question1">
     <h1>Czy chciałabyś się spotkać w niedzielę?</h1>
-    <a class="button" href="#" onclick="nextQuestion()">Tak!</a>
-    <a class="button" href="#">nie :c</a>
+    <a class="button" href="#" onclick="goToJoy()">Tak!</a>
+    <a class="button" id="escapeNo">nie :c</a>
   </div>
 
-  <div class="container" id="question2" style="display:none; height: 300px;">
+  <!-- Ekran radości -->
+  <div class="container" id="joyScreen">
+    <h1>Bardzo się cieszę!</h1>
+  </div>
+
+  <!-- Pytanie 2 -->
+  <div class="container" id="question2">
     <h1>Czy możemy się spotkać wieczorem?</h1>
     <div class="cloud cloud1" onclick="alert('Super! ♥')">tak!</div>
     <div class="cloud cloud2" id="noCloud">nie</div>
   </div>
 
+  <!-- Bubbletea -->
+  <div class="container" id="bubbletea">
+    <h1>Czy przywieźć Ci bubbletea?</h1>
+    <a class="button" href="#" onclick="goToFinal()">Tak, poproszę</a>
+    <a class="button" href="#" onclick="goToFinal()">nie, dziękuję</a>
+  </div>
+
+  <!-- Finał -->
+  <div class="container" id="finalScreen">
+    <h1 class="final-message">Do zobaczenia w niedzielę! &lt;3</h1>
+    <a class="button back-button" href="#" onclick="goToStart()">wróć na start</a>
+  </div>
+
   <script>
-    function nextQuestion() {
-      document.getElementById('question1').style.display = 'none';
-      document.getElementById('question2').style.display = 'block';
+    function hideAll() {
+      document.querySelectorAll('.container').forEach(el => el.style.display = 'none');
     }
 
+    function goToJoy() {
+      hideAll();
+      document.getElementById('joyScreen').style.display = 'block';
+      setTimeout(() => {
+        hideAll();
+        document.getElementById('bubbletea').style.display = 'block';
+      }, 2000);
+    }
+
+    function goToFinal() {
+      hideAll();
+      document.getElementById('finalScreen').style.display = 'block';
+    }
+
+    function goToStart() {
+      hideAll();
+      document.getElementById('question1').style.display = 'block';
+    }
+
+    // "Nie :c" ucieka
+    const escapeNo = document.getElementById('escapeNo');
+
+    document.addEventListener('mousemove', function(e) {
+      const rect = escapeNo.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < 120) {
+        const moveX = dx > 0 ? -50 : 50;
+        const moveY = dy > 0 ? -30 : 30;
+
+        let newLeft = escapeNo.offsetLeft + moveX;
+        let newTop = escapeNo.offsetTop + moveY;
+
+        const maxLeft = window.innerWidth - rect.width;
+        const maxTop = window.innerHeight - rect.height;
+
+        newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+        newTop = Math.max(0, Math.min(maxTop, newTop));
+
+        escapeNo.style.position = 'absolute';
+        escapeNo.style.left = `${newLeft}px`;
+        escapeNo.style.top = `${newTop}px`;
+      }
+    });
+
+    // Ruch chmurki w pytaniu 2
     const noCloud = document.getElementById('noCloud');
 
     document.addEventListener('mousemove', function(e) {
