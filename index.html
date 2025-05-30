@@ -57,8 +57,8 @@
       border-radius: 50px;
       box-shadow: 0 0 10px #000;
       cursor: pointer;
-      transition: transform 0.3s ease-in-out;
       font-size: 14px;
+      transition: top 0.3s ease, left 0.3s ease;
     }
     .cloud1 {
       top: 50%;
@@ -105,12 +105,21 @@
 
     document.addEventListener('mousemove', function(e) {
       const rect = noCloud.getBoundingClientRect();
-      const distance = Math.hypot(rect.x - e.clientX, rect.y - e.clientY);
+      const cloudX = rect.left + rect.width / 2;
+      const cloudY = rect.top + rect.height / 2;
+      const dx = e.clientX - cloudX;
+      const dy = e.clientY - cloudY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
       if (distance < 100) {
-        const newX = Math.random() * (window.innerWidth - 100);
-        const newY = Math.random() * (window.innerHeight - 100);
-        noCloud.style.left = `${newX}px`;
-        noCloud.style.top = `${newY}px`;
+        let newLeft = rect.left - dx * 0.3;
+        let newTop = rect.top - dy * 0.3;
+
+        newLeft = Math.max(0, Math.min(window.innerWidth - rect.width, newLeft));
+        newTop = Math.max(0, Math.min(window.innerHeight - rect.height, newTop));
+
+        noCloud.style.left = `${newLeft}px`;
+        noCloud.style.top = `${newTop}px`;
       }
     });
   </script>
