@@ -2,182 +2,58 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bezpieczeństwo systemu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retro Gra - Pytanie 1</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      background: black;
-      overflow: hidden;
-      font-family: 'Courier New', Courier, monospace;
+      font-family: 'Press Start 2P', cursive;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: linear-gradient(135deg, #ff77aa, #7799ff);
+      image-rendering: pixelated;
     }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      display: block;
-      z-index: 0;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
-      color: #00ff00;
+    .container {
+      background: #222;
+      border: 4px solid #fff;
+      padding: 40px;
       text-align: center;
-      padding: 40px 20px;
+      max-width: 500px;
+      box-shadow: 0 0 20px #000;
+      border-radius: 16px;
     }
-
-    #terminal {
-      background: #000000c0;
-      border: 1px solid #00ff00;
-      padding: 20px;
-      height: 400px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      margin: 20px auto;
-      width: 80%;
+    h1 {
+      font-size: 20px;
+      margin-bottom: 30px;
     }
-
-    button {
-      background-color: transparent;
-      color: #00ff00;
-      border: 1px solid #00ff00;
+    .button {
+      display: block;
+      margin: 10px auto;
       padding: 10px 20px;
-      font-family: monospace;
+      background: #44ff99;
+      color: #000;
+      text-decoration: none;
+      border: 3px solid #000;
+      border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 20px;
+      transition: all 0.2s ease-in-out;
     }
-
-    button:hover {
-      background-color: #004400;
+    .button:hover {
+      background: #88ffaa;
     }
-
-    #finalMessage {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 80px;
-      color: red;
-      font-weight: bold;
-      text-shadow: 0 0 20px red;
-      animation: flash 0.2s infinite alternate;
-      z-index: 999;
-      text-align: center;
-    }
-
-    @keyframes flash {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   </style>
 </head>
 <body>
-
-  <canvas id="matrix"></canvas>
-
-  <div class="content" id="mainContent">
-    <h1>Terminal zdalnego dostępu</h1>
-    <p>Naciśnij przycisk, aby wygenerować kod dostawy dla sprzedającego.</p>
-    <button onclick="startTerminal()">Zatwierdź płatność kuriera</button>
-
-    <div id="terminal"></div>
+  <div class="container">
+    <h1>Czy chciałabyś się spotkać w niedzielę?</h1>
+    <a class="button" href="#tak">Tak!</a>
+    <a class="button" href="#nie">nie :c</a>
   </div>
-
-  <div id="finalMessage">JEBAĆ SCAMERÓW</div>
-
-  <script>
-    // Matrix rain background
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-
-    const letters = "アァイィウエカキクケコサシスセソABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-
-        drops[i]++;
-      }
-    }
-
-    setInterval(drawMatrix, 33);
-
-    // Terminal simulation
-    function generateFakeLog() {
-      const ips = ["192.168.1.12", "10.0.0.5", "172.16.254.1", "185.201.22.98"];
-      const users = ["admin", "root", "system", "guest"];
-      const actions = [
-        "Logowanie użytkownika...",
-        "Uwierzytelnianie zakończone.",
-        "Uzyskano uprawnienia administratora.",
-        "Skanowanie portów...",
-        "Wykryto podejrzaną aktywność sieciową.",
-        "Inicjowanie śledzenia pakietów...",
-        "Analiza plików tymczasowych...",
-        "Zapis logów do system_trace.log",
-        "Wysyłanie danych do zdalnego serwera...",
-        "Sesja zakończona pomyślnie."
-      ];
-
-      const randomIP = ips[Math.floor(Math.random() * ips.length)];
-      const randomUser = users[Math.floor(Math.random() * users.length)];
-      return [
-        `Połączenie z hostem: ${randomIP}`,
-        `Logowanie użytkownika: ${randomUser}`,
-        ...actions
-      ];
-    }
-
-    function startTerminal() {
-      const terminal = document.getElementById("terminal");
-      const finalMessage = document.getElementById("finalMessage");
-      const mainContent = document.getElementById("mainContent");
-      terminal.textContent = "";
-      finalMessage.style.display = "none";
-      const logLines = generateFakeLog();
-      let index = 0;
-
-      const interval = setInterval(() => {
-        if (index < logLines.length) {
-          terminal.textContent += `[${new Date().toLocaleTimeString()}] ${logLines[index]}\n`;
-          terminal.scrollTop = terminal.scrollHeight;
-          index++;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            // Ukryj wszystko
-            mainContent.style.display = "none";
-            canvas.style.display = "none";
-            // Pokaż wielki migający napis
-            finalMessage.style.display = "block";
-          }, 3000);
-        }
-      }, 800);
-    }
-  </script>
-
 </body>
 </html>
