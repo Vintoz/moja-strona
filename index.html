@@ -102,6 +102,8 @@
     }
 
     const noCloud = document.getElementById('noCloud');
+    const screenWidth = 1440;
+    const screenHeight = 1080;
 
     document.addEventListener('mousemove', function(e) {
       const rect = noCloud.getBoundingClientRect();
@@ -112,11 +114,14 @@
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance < 100) {
-        let newLeft = rect.left - dx * 0.3;
-        let newTop = rect.top - dy * 0.3;
+        let moveX = dx > 0 ? -40 : 40;
+        let moveY = dy > 0 ? -40 : 40;
 
-        newLeft = Math.max(0, Math.min(window.innerWidth - rect.width, newLeft));
-        newTop = Math.max(0, Math.min(window.innerHeight - rect.height, newTop));
+        let newLeft = rect.left + moveX;
+        let newTop = rect.top + moveY;
+
+        newLeft = Math.max(0, Math.min(screenWidth - rect.width, newLeft));
+        newTop = Math.max(0, Math.min(screenHeight - rect.height, newTop));
 
         noCloud.style.left = `${newLeft}px`;
         noCloud.style.top = `${newTop}px`;
